@@ -85,6 +85,7 @@ public class CombatController : MonoBehaviour
             }
 
             Debug.Log("Hero exited battle standard view!");
+            GameStateManager.Instance.SetState(GameStateManager.GameState.Overworld);
         }
         else if (heroHP <= 0)
         {
