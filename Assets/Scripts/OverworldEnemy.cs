@@ -6,6 +6,8 @@ public class OverworldEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) // Use OnTriggerEnter for 3D
     {
+        Debug.Log($"Player collided with {monsterData.monsterName}!");
+
         if (other.CompareTag("Player"))
         {
             // Optional: Destroy or disable overworld sprite so it disappears while fighting
