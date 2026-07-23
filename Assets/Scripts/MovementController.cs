@@ -2,15 +2,25 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private InputSystem_Actions inputActions;
+
+    void Awake()
     {
-        
+        inputActions = new InputSystem_Actions();
+        inputActions.Player.Move.performed += ctx => Move(ctx.ReadValue<Vector2>());
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Move(Vector2 direction)
     {
-        
+        transform.Translate(direction);
+    }
+
+    void OnEnable()
+    {
+        inputActions.Enable();
+    }
+    void OnDisable()
+    {
+        inputActions.Disable();
     }
 }

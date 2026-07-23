@@ -2,7 +2,7 @@ using System.Collections;
 using QFSW.QC;
 using UnityEngine;
 
-public class CombatController : MonoBehaviour
+public class CombatManager : MonoBehaviour
 {
     [Header("Participants")]
     [SerializeField] private Transform heroTransform;
@@ -21,12 +21,27 @@ public class CombatController : MonoBehaviour
     [Header("Stats (Temporary for Demo)")]
     public int heroHP = 100;
     public int heroDamage = 25;
-    public int monsterHP = 60;
-    public int monsterDamage = 10;
 
-    [Command()]
-    public void StartBattle()
+    private MonsterData currentMonsterData;
+    private int currentMonsterHP;
+
+    public void SetupAndStartBattle(MonsterData data)
     {
+        currentMonsterData = data;
+        currentMonsterHP = data.maxHP;
+
+        // Add monster prefab
+        var monster = Instantiate(data.monsterObject, new Vector3(5f, 0f, 0f), Quaternion.identity);
+        monster.transform.SetParent(this.transform);
+        monsterTransform = monster.transform;
+
+        // Make sure monster GameObject is visible/active in combat stage
+        monsterTransform.gameObject.SetActive(true);
+
+        // Set starting positions for hero and monster
+        heroTransform.position = new Vector3(-5f, 0f, 0f);
+
+        // Start the battle sequence!
         StartCoroutine(BattleRoutine());
     }
 
@@ -51,14 +66,14 @@ public class CombatController : MonoBehaviour
 
             // 2. IMPACT & DAMAGE
             Debug.Log("2. IMPACT & DAMAGE");
-            heroHP -= monsterDamage;
-            monsterHP -= heroDamage;
+            heroHP -= currentMonsterData.attackDamage;
+            currentMonsterHP -= heroDamage;
 
             // TODO: Trigger sound effect, sprite flash, or camera shake here!
-            Debug.Log($"BAM! Hero HP: {heroHP} | Monster HP: {monsterHP}");
+            Debug.Log($"BAM! Hero HP: {heroHP} | Monster HP: {currentMonsterHP}");
 
             // Check Win/Loss conditions
-            if (monsterHP <= 0 || heroHP <= 0)
+            if (currentMonsterHP <= 0 || heroHP <= 0)
             {
                 battleOver = true;
                 break;
@@ -71,10 +86,11 @@ public class CombatController : MonoBehaviour
 
         // 4. RESOLUTION
         Debug.Log("4. RESOLUTION");
-        if (monsterHP <= 0)
+        if (currentMonsterHP <= 0)
         {
             // Disable or fade out monster sprite
-            monsterTransform.gameObject.SetActive(false);
+            Destroy(monsterTransform.gameObject);
+            //monsterTransform.gameObject.SetActive(false);
 
             // Hero runs off the right side of the screen
             Vector3 exitTarget = new Vector3(offscreenExitX, heroTransform.position.y, heroTransform.position.z);

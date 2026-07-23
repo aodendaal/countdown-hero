@@ -14,13 +14,15 @@ public class GameStateManager : MonoBehaviour
 
     [Header("Controllers & Logic")]
     [SerializeField] private MonoBehaviour overworldMovementScript;
-    [SerializeField] private CombatController combatController;
+    [SerializeField] private CombatManager combatManager;
 
     [Header("Priority Settings")]
     [SerializeField] private int activePriority = 20;
     [SerializeField] private int inactivePriority = 10;
 
     public GameState CurrentState { get; private set; }
+
+    private GameObject currentOverworldEnemyObject;
 
     private void Awake()
     {
@@ -29,10 +31,40 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
+        SetState(GameState.Overworld);
+    }
+
+    public void StartCombatWith(MonsterData monsterData, GameObject overworldEnemyObj)
+    {
+        currentOverworldEnemyObject = overworldEnemyObj;
+
+        // 1. Pass data to combat manager
+        combatManager.SetupAndStartBattle(monsterData);
+
+        // 2. Switch State & Cut Camera
         SetState(GameState.Combat);
     }
 
-    [Command()]
+    public void EndCombat(bool playerWon)
+    {
+        if (playerWon)
+        {
+            // Remove the monster from the map upon victory
+            if (currentOverworldEnemyObject != null)
+            {
+                Destroy(currentOverworldEnemyObject);
+            }
+
+            // Snap back to overworld
+            SetState(GameState.Overworld);
+        }
+        else
+        {
+            // Handle player death / respawn logic
+        }
+    }
+
+
     public void SetState(GameState newState)
     {
         CurrentState = newState;
@@ -55,7 +87,6 @@ public class GameStateManager : MonoBehaviour
 
                 // Disable overworld controls and start battle sequence
                 overworldMovementScript.enabled = false;
-                combatController.StartBattle();
                 break;
         }
     }
