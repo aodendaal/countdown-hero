@@ -79,5 +79,7 @@ public class CountdownTimer : MonoBehaviour
     {
         // Add game jam logic here (e.g., trigger game over, enable plug-and-play event)
         Debug.Log("Countdown Finished!");
+        GameStateManager.Instance.TimeUp();
+
     }
 }

@@ -4,15 +4,20 @@ using QFSW.QC; // Use "using Cinemachine;" if on Cinemachine v2
 
 public class GameStateManager : MonoBehaviour
 {
-    public enum GameState { Overworld, Combat, Menu }
+    public enum GameState { Start, Overworld, Combat, Menu, Timeout }
 
     public static GameStateManager Instance { get; private set; }
+
+    [Header("Menus")]
+    [SerializeField] private GameObject startMenu;
+    [SerializeField] private GameObject timeOutMenu;
 
     [Header("Cinemachine Cameras")]
     [SerializeField] private CinemachineCamera overworldVCam;
     [SerializeField] private CinemachineCamera combatVCam;
 
     [Header("Controllers & Logic")]
+    [SerializeField] private CountdownTimer countdownTimer;
     [SerializeField] private MonoBehaviour overworldMovementScript;
     [SerializeField] private CombatManager combatManager;
 
@@ -31,7 +36,11 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        SetState(GameState.Overworld);
+
+        startMenu.SetActive(false);
+        timeOutMenu.SetActive(false);
+
+        SetState(GameState.Start);
     }
 
     public void StartCombatWith(MonsterData monsterData, GameObject overworldEnemyObj)
@@ -64,6 +73,10 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    public void TimeUp()
+    {
+        SetState(GameState.Timeout);
+    }
 
     public void SetState(GameState newState)
     {
@@ -71,6 +84,18 @@ public class GameStateManager : MonoBehaviour
 
         switch (newState)
         {
+            case GameState.Start:
+                startMenu.SetActive(true);
+                overworldVCam.Priority = activePriority;
+                combatVCam.Priority = inactivePriority;
+                break;
+
+            case GameState.Timeout:
+                timeOutMenu.SetActive(true);
+                overworldVCam.Priority = activePriority;
+                combatVCam.Priority = inactivePriority;
+                break;
+
             case GameState.Overworld:
                 // Raise Overworld priority so Cinemachine blends/cuts to it
                 overworldVCam.Priority = activePriority;
@@ -89,5 +114,20 @@ public class GameStateManager : MonoBehaviour
                 overworldMovementScript.enabled = false;
                 break;
         }
+    }
+
+    public void OnStartGame()
+    {
+        startMenu.SetActive(false);
+        timeOutMenu.SetActive(false);
+        countdownTimer.ResetTimer();
+        countdownTimer.StartTimer();
+
+        SetState(GameState.Overworld);
+    }
+
+    public void OnQuitGame()
+    {
+        Application.Quit();
     }
 }
