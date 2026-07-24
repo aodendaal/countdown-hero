@@ -38,7 +38,7 @@ public class CombatManager : MonoBehaviour
         currentMonsterHP = data.maxHP;
 
         // Add monster prefab
-        var monster = Instantiate(data.monsterObject, new Vector3(8f, -4.5f, 0f), Quaternion.identity);
+        var monster = Instantiate(data.monsterObject, new Vector3(8f, -5f, 0f), Quaternion.identity);
         monster.transform.SetParent(this.transform);
         monsterTransform = monster.transform;
 
@@ -46,7 +46,7 @@ public class CombatManager : MonoBehaviour
         monsterTransform.gameObject.SetActive(true);
 
         // Set starting positions for hero and monster
-        heroTransform.position = new Vector3(-8f, -4.5f, 0f);
+        heroTransform.position = new Vector3(-8f, -5f, 0f);
 
         // Start the battle sequence!
         StartCoroutine(BattleRoutine());

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using QFSW.QC;
 
 public class CountdownTimer : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class CountdownTimer : MonoBehaviour
         isRunning = true;
     }
 
+    [Command()]
     public void PauseTimer()
     {
         isRunning = false;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4418963924007476593}
   - component: {fileID: 3922871678799321039}
   m_Layer: 0
-  m_Name: CombatSlime
+  m_Name: CombatToadstool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8003648935385958514, guid: f99181a6ada3841149454836bfe6f29f, type: 3}
+  m_Sprite: {fileID: 3761720640787443570, guid: f99181a6ada3841149454836bfe6f29f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ Animator:
   m_GameObject: {fileID: 5877930211901948519}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 26e824ab7c1104961930caf73aa689bc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2ae6b1fcba53845acb5a4479b669ba70, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -44,8 +44,11 @@ TagManager:
   - name: Background
     uniqueID: 769321299
     locked: 0
-  - name: Units
+  - name: Features
     uniqueID: 3987432535
+    locked: 0
+  - name: Units
+    uniqueID: 1763754297
     locked: 0
   m_RenderingLayers:
   - Default

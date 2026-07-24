@@ -13,8 +13,9 @@ public class MovementController : MonoBehaviour
 
     private void Move(Vector2 direction)
     {
+        Debug.Log(direction);
         heroWalk.Play();
-        transform.Translate(direction);
+        transform.Translate(new Vector3((int)direction.x, (int)direction.y, 0f));
     }
 
     void OnEnable()

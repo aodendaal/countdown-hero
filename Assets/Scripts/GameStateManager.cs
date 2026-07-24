@@ -25,6 +25,7 @@ public class GameStateManager : MonoBehaviour
     [Header("Entities")]
     [SerializeField] private GameObject overworldHero;
     [SerializeField] private GameObject overworldMonstersPrefab;
+    [SerializeField] private HeroData heroData;
 
     [Header("Priority Settings")]
     [SerializeField] private int activePriority = 20;
@@ -142,8 +143,18 @@ public class GameStateManager : MonoBehaviour
         countdownTimer.ResetTimer();
         countdownTimer.StartTimer();
 
-        overworldHero.transform.position = new Vector3(0f, 10f, 0f);
+        // Reset hero and camera
+        var startingPosition = new Vector3(0f, 13f, 0f);
+        overworldHero.transform.position = startingPosition;
+        Vector3 warpDelta = startingPosition - overworldHero.transform.position;
+        overworldVCam.PreviousStateIsValid = false;
+        overworldVCam.OnTargetObjectWarped(overworldHero.transform, warpDelta);
 
+        // Reset HP and damage (To change with persisted damage)
+        combatManager.heroDamage = heroData.attackDamage;
+        combatManager.heroHP = heroData.maxHP;
+
+        // Place all monsters
         overlandMonsters = Instantiate(overworldMonstersPrefab, Vector3.zero, Quaternion.identity);
         overlandMonsters.transform.SetParent(this.transform);
 
