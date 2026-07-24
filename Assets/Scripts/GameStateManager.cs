@@ -20,6 +20,11 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private CountdownTimer countdownTimer;
     [SerializeField] private MonoBehaviour overworldMovementScript;
     [SerializeField] private CombatManager combatManager;
+    [SerializeField] private MusicManager musicManager;
+
+    [Header("Entities")]
+    [SerializeField] private GameObject overworldHero;
+    [SerializeField] private GameObject overworldMonstersPrefab;
 
     [Header("Priority Settings")]
     [SerializeField] private int activePriority = 20;
@@ -28,6 +33,8 @@ public class GameStateManager : MonoBehaviour
     public GameState CurrentState { get; private set; }
 
     private GameObject currentOverworldEnemyObject;
+    private GameObject overlandMonsters;
+
 
     private void Awake()
     {
@@ -56,6 +63,7 @@ public class GameStateManager : MonoBehaviour
 
     public void EndCombat(bool playerWon)
     {
+
         if (playerWon)
         {
             // Remove the monster from the map upon victory
@@ -64,6 +72,7 @@ public class GameStateManager : MonoBehaviour
                 Destroy(currentOverworldEnemyObject);
             }
 
+            if (CurrentState != GameState.Combat) return;
             // Snap back to overworld
             SetState(GameState.Overworld);
         }
@@ -85,18 +94,24 @@ public class GameStateManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Start:
+                Debug.LogWarning("State: Sart");
+                musicManager.PlayMenuTrack();
                 startMenu.SetActive(true);
                 overworldVCam.Priority = activePriority;
                 combatVCam.Priority = inactivePriority;
                 break;
 
             case GameState.Timeout:
+                Debug.LogWarning("State: Timeout");
+                musicManager.PlayMenuTrack();
                 timeOutMenu.SetActive(true);
                 overworldVCam.Priority = activePriority;
                 combatVCam.Priority = inactivePriority;
                 break;
 
             case GameState.Overworld:
+                Debug.LogWarning("State: Overworld");
+                musicManager.PlayGameTrack();
                 // Raise Overworld priority so Cinemachine blends/cuts to it
                 overworldVCam.Priority = activePriority;
                 combatVCam.Priority = inactivePriority;
@@ -106,6 +121,8 @@ public class GameStateManager : MonoBehaviour
                 break;
 
             case GameState.Combat:
+                Debug.LogWarning("State: Combat");
+                musicManager.PlayGameTrack();
                 // Raise Combat priority to switch to fixed combat view
                 combatVCam.Priority = activePriority;
                 overworldVCam.Priority = inactivePriority;
@@ -116,18 +133,21 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    public void OnStartGame()
+    public void StartNewGame()
     {
-        startMenu.SetActive(false);
-        timeOutMenu.SetActive(false);
+        // Clean up
+        Destroy(overlandMonsters);
+
+        // Reset
         countdownTimer.ResetTimer();
         countdownTimer.StartTimer();
 
-        SetState(GameState.Overworld);
-    }
+        overworldHero.transform.position = new Vector3(0f, 10f, 0f);
 
-    public void OnQuitGame()
-    {
-        Application.Quit();
+        overlandMonsters = Instantiate(overworldMonstersPrefab, Vector3.zero, Quaternion.identity);
+        overlandMonsters.transform.SetParent(this.transform);
+
+        // Start Overworld
+        SetState(GameState.Overworld);
     }
 }

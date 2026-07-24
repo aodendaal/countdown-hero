@@ -25,6 +25,13 @@ public class CombatManager : MonoBehaviour
     private MonsterData currentMonsterData;
     private int currentMonsterHP;
 
+    private AudioSource heroAttack;
+
+    void Start()
+    {
+        heroAttack = heroTransform.gameObject.GetComponent<AudioSource>();
+    }
+
     public void SetupAndStartBattle(MonsterData data)
     {
         currentMonsterData = data;
@@ -66,6 +73,7 @@ public class CombatManager : MonoBehaviour
 
             // 2. IMPACT & DAMAGE
             Debug.Log("2. IMPACT & DAMAGE");
+            heroAttack.Play();
             heroHP -= currentMonsterData.attackDamage;
             currentMonsterHP -= heroDamage;
 

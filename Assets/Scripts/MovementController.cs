@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
+    [SerializeField] private AudioSource heroWalk;
     private InputSystem_Actions inputActions;
 
     void Awake()
@@ -12,6 +13,7 @@ public class MovementController : MonoBehaviour
 
     private void Move(Vector2 direction)
     {
+        heroWalk.Play();
         transform.Translate(direction);
     }
 

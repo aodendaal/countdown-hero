@@ -9,6 +9,8 @@ public class CountdownTimer : MonoBehaviour
     [Header("Timer Settings")]
     [SerializeField] private float durationInSeconds = 60f;
     [SerializeField] private bool autoStart = true;
+    [Header("Audio Reference")]
+    [SerializeField] private AudioSource timeupAudio;
 
     private float currentTime;
     private bool isRunning;
@@ -79,6 +81,7 @@ public class CountdownTimer : MonoBehaviour
     {
         // Add game jam logic here (e.g., trigger game over, enable plug-and-play event)
         Debug.Log("Countdown Finished!");
+        timeupAudio.Play();
         GameStateManager.Instance.TimeUp();
 
     }
